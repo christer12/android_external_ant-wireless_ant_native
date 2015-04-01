@@ -32,37 +32,45 @@ BOARD_ANT_WIRELESS_DEVICE := "qualcomm-smd"
 
 endif
 
+
 ifeq ($(BOARD_ANT_WIRELESS_DEVICE),"wl12xx")
 
-ANT_DIR := src/bluez_hci
+# libantradio not required
 
 else ifeq ($(BOARD_ANT_WIRELESS_DEVICE),"bcm433x")
 
-ANT_DIR := src/bluez_hci
+# libantradio not required
 
 else ifeq ($(BOARD_ANT_WIRELESS_DEVICE),"cg29xx")
 
-ANT_DIR := src/vfs
+MY_ANT_DIR := src/vfs
 
 else ifeq ($(BOARD_ANT_WIRELESS_DEVICE),"qualcomm-smd")
 
-ANT_DIR := src/vfs
+MY_ANT_DIR := src/vfs
 
 else ifeq ($(BOARD_ANT_WIRELESS_DEVICE),"qualcomm-uart")
 
-ANT_DIR := src/bt-vendor_vfs
+MY_ANT_DIR := src/bt-vendor_vfs
 
 else ifeq ($(BOARD_ANT_WIRELESS_DEVICE),"vfs-prerelease")
 
-ANT_DIR := src/vfs
+MY_ANT_DIR := src/vfs
 
 else
 
-$(error Unsupported BOARD_ANT_WIRELESS_DEVICE := $(BOARD_ANT_WIRELESS_DEVICE))
+# libantradio will not be built
 
 endif # BOARD_ANT_WIRELESS_DEVICE type
 
 COMMON_DIR := src/common
+
+
+ifeq ($(MY_ANT_DIR),)
+
+# No libantradio to build
+
+else
 
 include $(LOCAL_PATH)/$(ANT_DIR)/Android.mk
 
@@ -91,5 +99,6 @@ LOCAL_MODULE:=antradio_app
 
 include $(BUILD_EXECUTABLE)
 
+endif # MY_ANT_DIR defined (build libantradio)
 
 endif # BOARD_ANT_WIRELESS_DEVICE defined
